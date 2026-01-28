@@ -17,21 +17,31 @@ An interactive Jupyter Notebook tool for browsing, downloading, and processing X
 
 ## Setup
 
-1. **Create and activate conda environment**:
+### 1. Create and activate conda environment
+
 ```bash
 conda env create -f echo_s3_env.yml
 conda activate echo_s3_env
 ```
 
-2. **Configure credentials** (Required to use this notebook):
-   - Credentials file is required. Modify `DEFAULT_JSON` path in Cell 1 to point to your credentials file
-   - Credentials file format:
+### 2. Configure credentials (Required)
+
+**Step 1:** Edit `echo_creds.json` and fill in your ECHO S3 credentials:
 ```json
 {
-  "access_key": "YOUR_ACCESS_KEY",
-  "secret_key": "YOUR_SECRET_KEY"
+  "access_key": "your_actual_access_key",
+  "secret_key": "your_actual_secret_key"
 }
 ```
+
+**Step 2:** In the notebook Cell 1, update the `DEFAULT_JSON` variable (around line 37) to point to your `echo_creds.json` file location:
+```python
+DEFAULT_JSON = os.path.expanduser(r"C:\path\to\your\echo_creds.json")
+```
+
+**⚠️ Security Warning:**
+- Never commit credentials to version control
+- If sharing this repo, make sure to clear your credentials from `echo_creds.json` before committing
 
 ---
 
@@ -61,15 +71,6 @@ Open the notebook in VSCode or Jupyter.
   - Enter keyword(s) to search (supports multiple keywords separated by spaces or commas)
   - Choose sort order (by name, size, or date)
 
-**NEW: Metadata Filtering (Optional)**
-- Click "Load" button to load a CSV metadata file (e.g., `metadata_summary.csv`)
-- Once loaded, expand the "Metadata Filters" accordion to see available filter options
-- Select desired values from dropdown menus for each metadata column (e.g., Material, Alloy, Condition)
-- Click "Apply Metadata Filters" button to filter objects based on selected criteria
-- The system supports flexible experiment ID matching:
-  - Handles both dash (`-`) and underscore (`_`) formats automatically
-  - Example: `mg39628-1_0092` will match files containing `mg39628-1_0092` or `mg39628_1_0092`
-
 **File Actions:**
 - Select files using checkboxes
 - Optional: Click "Download Selected" to download files locally
@@ -83,9 +84,23 @@ Open the notebook in VSCode or Jupyter.
   - **16-bit Float TIFF**: Preserves intensity values with good precision (balanced size/quality)
   - **NumPy Array (.npy)**: Raw array format (for further processing)
 - Specify output directory
-- Dataset name field: Leave blank for auto-detection or specify (e.g., "narrowfov")
+- Dataset name field: Leave blank for auto-detection or specify (such as "narrowfov")
 - Click "Batch Save Selected Frames" to process all files
 - Each H5 file will create its own subdirectory with all frames saved
+
+---
+
+**Step 2.5: Metadata Filtering (Optional)**
+
+If you want to filter experiments by metadata (Material, Alloy, Condition, etc.):
+
+- **Locate metadata file**: Find `metadata_summary.csv` in the network location `\\psg-ds2422plus\d1\[experiment_folder]\`
+  - Each experiment folder contains its own `metadata_summary.csv` file
+- **Load metadata**: In Cell 4 UI, enter the path to `metadata_summary.csv` and click "Load" button
+- **Apply filters**: 
+  - Expand the "Metadata Filters" accordion to see available filter options
+  - Select desired values from dropdown menus for each metadata column
+  - Click "Apply Metadata Filters" button to filter objects based on selected criteria
 
 ---
 
@@ -137,15 +152,14 @@ Open the notebook in VSCode or Jupyter.
 ## Configuration
 
 - **ECHO Endpoint**: `https://s3.echo.stfc.ac.uk` (modify `ECHO_ENDPOINT` in Cell 1)
-- **Credentials Path**: `~/Project/S3/echo_creds.json` (modify `DEFAULT_JSON` in Cell 1)
+- **Credentials Path**: Modify `DEFAULT_JSON` in Cell 1 to point to your `echo_creds.json` file
 - **Object Limit**: 5000 objects per listing (modify `MAX_LIST_OBJECTS` in Cell 2)
-- **Metadata CSV Path**: Default `./metadata_summary.csv` (configurable in Cell 4 UI)
 
 ---
 
 ## Metadata CSV Format
 
-The metadata CSV file should contain experiment information with at least the following structure:
+The `metadata_summary.csv` file contains experiment information with the following structure:
 
 ```csv
 Experiment id,Material,Alloy,Condition,...
@@ -156,8 +170,6 @@ mg39628-1_0093,Al,Al-10Si-0.5Mg,T6,...
 **Key Requirements:**
 - Must include an `Experiment id` column
 - Column names are case-sensitive (except Comments which is excluded from filters)
-- Experiment IDs in CSV can use either dash (`-`) or underscore (`_`) format
-- System automatically handles format variations when matching with S3 file names
 
 ---
 
@@ -177,10 +189,10 @@ mg39628-1_0093,Al,Al-10Si-0.5Mg,T6,...
 - **Connection error**: Verify network access to ECHO S3 endpoint
 - **HDF5 read error**: File may require hdf5plugin compression support
 - **Metadata filters not working**: Ensure CSV is loaded successfully and "Apply Metadata Filters" button is clicked
-- **Experiment ID mismatch**: Check if CSV uses consistent naming format (dash vs underscore)
 
 ---
 
 ## Security
 
 - Never commit credentials to version control
+- Clear credentials from `echo_creds.json` before sharing or committing the repo
