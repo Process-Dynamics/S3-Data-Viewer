@@ -94,9 +94,14 @@ Open the notebook in VSCode or Jupyter.
 
 If you want to filter experiments by metadata (Material, Alloy, Condition, etc.):
 
-- **Locate metadata file**: Find `metadata_summary.csv` in the network location `\\psg-ds2422plus\d1\[experiment_folder]\`
-  - Each experiment folder contains its own `metadata_summary.csv` file
-- **Load metadata**: In Cell 4 UI, enter the path to `metadata_summary.csv` and click "Load" button
+- **Locate metadata file**: Find **`metadata_summary.csv`** in the network location:
+  ```
+  \\psg-ds2422plus\d1\[experiment_folder]\metadata_summary.csv
+  ```
+  Each experiment folder contains its own **`metadata_summary.csv`** file
+  
+- **Load metadata**: In Cell 4 UI, enter the path to **`metadata_summary.csv`** and click "Load" button
+
 - **Apply filters**: 
   - Expand the "Metadata Filters" accordion to see available filter options
   - Select desired values from dropdown menus for each metadata column
