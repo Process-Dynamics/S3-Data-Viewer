@@ -19,8 +19,15 @@ An interactive Jupyter Notebook tool for browsing, downloading, and processing X
 
 ### 1. Create and activate conda environment
 
+**For Linux:**
 ```bash
-conda env create -f echo_s3_env.yml
+conda env create -f echo_s3_env_linux.yml
+conda activate echo_s3_env
+```
+
+**For Windows:**
+```bash
+conda env create -f echo_s3_env_windows.yml
 conda activate echo_s3_env
 ```
 
